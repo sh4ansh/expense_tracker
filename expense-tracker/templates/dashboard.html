@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ₹
+            </div>
+
+            <div>
+                <h2>Expense</h2>
+                <h2>Tracker</h2>
+            </div>
+
+        </div>
+
+
+        <nav class="side-nav">
+
+            <a class="active"
+               href="{{ url_for('dashboard') }}">
+                🏠 <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('add_expense_page') }}">
+                ➕ <span>Add Expense</span>
+            </a>
+
+            <a href="{{ url_for('transactions') }}">
+                📋 <span>Transactions</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}">
+                🚪 <span>Logout</span>
+            </a>
+
+            <p class="sidebar-quote">
+                "Small steps make big progress."
+            </p>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+
+        <!-- Header -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Welcome back, {{ session["user_name"] }}! 👋
+                </h1>
+
+                <p>
+                    Here's a summary of your expenses.
+                </p>
+
+            </div>
+
+            <div class="user-badge">
+
+                <div class="avatar">
+                    {{ session["user_name"][0]|upper }}
+                </div>
+
+                <span>
+                    {{ session["user_name"] }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= STAT CARDS ================= -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card blue">
+
+                <div class="stat-icon">
+                    ₹
+                </div>
+
+                <div>
+
+                    <p>Total Expenses</p>
+
+                    <h2>
+                        ₹{{ "{:,.2f}".format(total|float) }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card green">
+
+                <div class="stat-icon">
+                    ₹
+                </div>
+
+                <div>
+
+                    <p>This Month</p>
+
+                    <h2>
+                        ₹{{ "{:,.2f}".format(current_month|float) }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card orange">
+
+                <div class="stat-icon">
+                    #
+                </div>
+
+                <div>
+
+                    <p>Total Transactions</p>
+
+                    <h2>
+                        {{ transaction_count }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card purple">
+
+                <div class="stat-icon">
+                    ★
+                </div>
+
+                <div>
+
+                    <p>Top Category</p>
+
+                    <h2>
+
+                        {% if top_category %}
+                            {{ top_category.category }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= CHARTS ================= -->
+
+        <div class="charts-grid">
+
+
+            <!-- Category Chart -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h2>Expenses by Category</h2>
+
+                        <p>
+                            Which category costs you the most?
+                        </p>
+                    </div>
+
+                </div>
+
+                {% if category_data %}
+
+                <div class="chart-box">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+
+                {% else %}
+
+                <div class="empty-state">
+                    No category data available yet.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- Monthly Chart -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h2>Monthly Expenses</h2>
+
+                        <p>
+                            Your spending trend over time.
+                        </p>
+                    </div>
+
+                </div>
+
+                {% if monthly_data %}
+
+                <div class="chart-box">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+
+                {% else %}
+
+                <div class="empty-state">
+                    No monthly data available yet.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= LOWER SECTION ================= -->
+
+        <div class="lower-grid">
+
+
+            <!-- Recent Transactions -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>Recent Transactions</h2>
+
+                        <p>
+                            Your latest expenses.
+                        </p>
+
+                    </div>
+
+                    <a href="{{ url_for('transactions') }}"
+                       class="view-link">
+                        View All →
+                    </a>
+
+                </div>
+
+
+                {% if recent_expenses %}
+
+                <div class="recent-list">
+
+                    {% for expense in recent_expenses %}
+
+                    <div class="recent-item">
+
+                        <div class="recent-info">
+
+                            <div class="transaction-icon">
+                                ₹
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ expense.title }}
+                                </strong>
+
+                                <small>
+                                    {{ expense.category }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="recent-right">
+
+                            <strong>
+                                ₹{{ "{:,.2f}".format(expense.amount|float) }}
+                            </strong>
+
+                            <small>
+                                {{ expense.expense_date }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <div class="empty-state">
+                    No transactions yet.
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- Expense Report -->
+
+            <div class="panel report-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>📄 Expense Report</h2>
+
+                        <p>
+                            Your spending summary.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span>Total Expenses</span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(total|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span>Total Transactions</span>
+
+                    <strong>
+                        {{ transaction_count }}
+                    </strong>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span>Average Expense</span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(statistics.average|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span>Highest Expense</span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(statistics.highest|float) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span>Lowest Expense</span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(statistics.lowest|float) }}
+                    </strong>
+
+                </div>
+
+
+                {% if top_category %}
+
+                <div class="report-row">
+
+                    <span>Top Category</span>
+
+                    <strong>
+                        {{ top_category.category }}
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="report-message">
+
+                    <strong>💡 Brief Report</strong>
+
+                    <p>
+                        {{ report }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= TIP ================= -->
+
+        <div class="tip-box">
+
+            <div class="tip-icon">
+                💡
+            </div>
+
+            <div>
+
+                <strong>
+                    Tip of the Day
+                </strong>
+
+                <p>
+                    Track your expenses regularly to stay in control
+                    and understand where your money goes.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- ================= CALCULATOR ================= -->
+
+<button id="calculatorButton"
+        class="calculator-button"
+        type="button">
+
+    🧮
+
+</button>
+
+
+<div id="calculator"
+     class="calculator">
+
+    <div class="calculator-header">
+
+        <strong>
+            Calculator
+        </strong>
+
+        <button id="closeCalculator"
+                type="button">
+            ×
+        </button>
+
+    </div>
+
+
+    <input id="calcDisplay"
+           class="calc-display"
+           type="text"
+           value="0"
+           readonly>
+
+
+    <div class="calculator-grid">
+
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+        <button data-value="/">÷</button>
+
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+        <button data-value="*">×</button>
+
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button data-value="-">−</button>
+
+        <button data-value="0">0</button>
+        <button data-value=".">.</button>
+        <button id="calculate">=</button>
+        <button data-value="+">+</button>
+
+    </div>
+
+
+    <button id="clearCalculator"
+            class="calculator-clear"
+            type="button">
+
+        Clear
+
+    </button>
+
+</div>
+
+
+
+<!-- ================= CHART DATA ================= -->
+
+<script>
+
+const categoryLabels = {{ category_data | map(attribute="category") | list | tojson }};
+
+const categoryValues = {{ category_data | map(attribute="total") | list | tojson }};
+
+
+const monthlyLabels = {{ monthly_data | map(attribute="month") | list | tojson }};
+
+const monthlyValues = {{ monthly_data | map(attribute="total") | list | tojson }};
+
+
+
+/* Category Chart */
+
+if (categoryLabels.length > 0) {
+
+    new Chart(
+        document.getElementById("categoryChart"),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: categoryLabels,
+
+                datasets: [{
+                    data: categoryValues
+                }]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "right"
+                    }
+                }
+            }
+        }
+    );
+
+}
+
+
+
+/* Monthly Chart */
+
+if (monthlyLabels.length > 0) {
+
+    new Chart(
+        document.getElementById("monthlyChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: monthlyLabels,
+
+                datasets: [{
+                    label: "Expenses",
+                    data: monthlyValues
+                }]
+            },
+
+            options: {
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+
+}
+
+</script>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

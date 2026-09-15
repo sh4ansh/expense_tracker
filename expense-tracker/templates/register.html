@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="auth-body">
+
+
+<div class="auth-page">
+
+
+    <!-- LEFT BRANDING -->
+
+    <div class="auth-brand-section">
+
+        <div class="auth-brand">
+
+            <div class="auth-logo">
+                ₹
+            </div>
+
+            <h1>
+                Expense Tracker
+            </h1>
+
+        </div>
+
+
+        <div class="auth-message">
+
+            <h2>
+                Start tracking<br>
+                your money today.
+            </h2>
+
+            <p>
+                Create your account and get a clearer
+                picture of your spending.
+            </p>
+
+        </div>
+
+
+        <div class="auth-features">
+
+            <div class="auth-feature">
+
+                <span>💰</span>
+
+                <div>
+                    <strong>
+                        Track Every Expense
+                    </strong>
+
+                    <small>
+                        Keep all your spending organized.
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div class="auth-feature">
+
+                <span>📈</span>
+
+                <div>
+                    <strong>
+                        Understand Your Spending
+                    </strong>
+
+                    <small>
+                        Use charts to identify spending patterns.
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div class="auth-feature">
+
+                <span>🎯</span>
+
+                <div>
+                    <strong>
+                        Make Better Decisions
+                    </strong>
+
+                    <small>
+                        Turn your expense data into useful insights.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- REGISTER CARD -->
+
+    <div class="auth-card">
+
+
+        <div class="mobile-auth-logo">
+
+            <div class="auth-logo">
+                ₹
+            </div>
+
+            <h1>
+                Expense Tracker
+            </h1>
+
+        </div>
+
+
+        <div class="auth-heading">
+
+            <h2>
+                Create your account
+            </h2>
+
+            <p>
+                Start managing your expenses in minutes.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="auth-error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+
+            <div class="auth-form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <div class="auth-input">
+
+                    <span>
+                        👤
+                    </span>
+
+                    <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <div class="auth-form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <div class="auth-input">
+
+                    <span>
+                        ✉
+                    </span>
+
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <div class="auth-form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="auth-input">
+
+                    <span>
+                        🔒
+                    </span>
+
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('password', this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+                Create Account
+            </button>
+
+
+        </form>
+
+
+        <div class="auth-divider">
+            <span>Already have an account?</span>
+        </div>
+
+
+        <a
+            href="{{ url_for('login') }}"
+            class="auth-secondary-button"
+        >
+            Sign In
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+function togglePassword(id, button) {
+
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+    } else {
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

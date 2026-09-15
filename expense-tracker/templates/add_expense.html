@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Expense - Expense Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<div class="app-layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ₹
+            </div>
+
+            <div>
+                <h2>Expense</h2>
+                <h2>Tracker</h2>
+            </div>
+
+        </div>
+
+
+        <nav class="side-nav">
+
+            <a href="{{ url_for('dashboard') }}">
+                🏠 <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('add_expense_page') }}"
+               class="active">
+                ➕ <span>Add Expense</span>
+            </a>
+
+            <a href="{{ url_for('transactions') }}">
+                📋 <span>Transactions</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}">
+                🚪 <span>Logout</span>
+            </a>
+
+            <p class="sidebar-quote">
+                "Track it. Understand it. Improve it."
+            </p>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- Header -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Add New Expense
+                </h1>
+
+                <p>
+                    Record a new expense and keep your finances organized.
+                </p>
+
+            </div>
+
+
+            <div class="user-badge">
+
+                <div class="avatar">
+                    {{ session["user_name"][0]|upper }}
+                </div>
+
+                <span>
+                    {{ session["user_name"] }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= FORM AREA ================= -->
+
+        <div class="expense-form-layout">
+
+
+            <!-- Form -->
+
+            <div class="panel expense-form-panel">
+
+                <div class="form-title">
+
+                    <div class="large-form-icon">
+                        ₹
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Expense Details
+                        </h2>
+
+                        <p>
+                            Enter the information about your expense.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form method="POST">
+
+
+                    <!-- Title -->
+
+                    <div class="form-group">
+
+                        <label for="title">
+                            Expense Title
+                        </label>
+
+                        <input
+                            id="title"
+                            type="text"
+                            name="title"
+                            placeholder="e.g. Lunch, Uber, Books"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- Amount -->
+
+                    <div class="form-group">
+
+                        <label for="amount">
+                            Amount
+                        </label>
+
+                        <div class="amount-input">
+
+                            <span>₹</span>
+
+                            <input
+                                id="amount"
+                                type="number"
+                                name="amount"
+                                placeholder="0.00"
+                                min="0.01"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Category -->
+
+                    <div class="form-group">
+
+                        <label for="category">
+                            Category
+                        </label>
+
+                        <select
+                            id="category"
+                            name="category"
+                            required
+                        >
+
+                            <option value="">
+                                Select a category
+                            </option>
+
+                            <option value="Food">
+                                🍔 Food
+                            </option>
+
+                            <option value="Travel">
+                                🚗 Travel
+                            </option>
+
+                            <option value="Shopping">
+                                🛍️ Shopping
+                            </option>
+
+                            <option value="Bills">
+                                💡 Bills
+                            </option>
+
+                            <option value="Entertainment">
+                                🎬 Entertainment
+                            </option>
+
+                            <option value="Education">
+                                🎓 Education
+                            </option>
+
+                            <option value="Other">
+                                📦 Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Date -->
+
+                    <div class="form-group">
+
+                        <label for="expense_date">
+                            Date
+                        </label>
+
+                        <input
+                            id="expense_date"
+                            type="date"
+                            name="expense_date"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- Description -->
+
+                    <div class="form-group">
+
+                        <label for="description">
+                            Description
+                            <span class="optional">
+                                Optional
+                            </span>
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            placeholder="Add any additional details..."
+                        ></textarea>
+
+                    </div>
+
+
+
+                    <!-- Buttons -->
+
+                    <div class="form-buttons">
+
+                        <a
+                            href="{{ url_for('dashboard') }}"
+                            class="cancel-button"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="submit-expense-button"
+                        >
+                            + Add Expense
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+
+            <!-- Information Panel -->
+
+            <div class="panel expense-info-panel">
+
+                <div class="info-icon">
+                    💡
+                </div>
+
+                <h2>
+                    Smart Expense Tracking
+                </h2>
+
+                <p>
+                    Keeping track of small expenses can help you
+                    understand where your money goes.
+                </p>
+
+
+                <div class="info-item">
+
+                    <div class="info-number">
+                        1
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Enter the amount
+                        </strong>
+
+                        <small>
+                            Add the exact amount you spent.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-number">
+                        2
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Choose a category
+                        </strong>
+
+                        <small>
+                            Categorize your spending for better analytics.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-number">
+                        3
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Save the expense
+                        </strong>
+
+                        <small>
+                            Your expense will be stored securely in MySQL.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-tip">
+
+                    <strong>
+                        💰 Why categorize?
+                    </strong>
+
+                    <p>
+                        Categories help the dashboard identify
+                        which areas consume most of your money.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ================= CALCULATOR ================= -->
+
+<button
+    id="calculatorButton"
+    class="calculator-button"
+    type="button"
+>
+    🧮
+</button>
+
+
+<div
+    id="calculator"
+    class="calculator"
+>
+
+    <div class="calculator-header">
+
+        <strong>
+            Calculator
+        </strong>
+
+        <button
+            id="closeCalculator"
+            type="button"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <input
+        id="calcDisplay"
+        class="calc-display"
+        type="text"
+        value="0"
+        readonly
+    >
+
+
+    <div class="calculator-grid">
+
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+        <button data-value="/">÷</button>
+
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+        <button data-value="*">×</button>
+
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button data-value="-">−</button>
+
+        <button data-value="0">0</button>
+        <button data-value=".">.</button>
+        <button id="calculate">=</button>
+        <button data-value="+">+</button>
+
+    </div>
+
+
+    <button
+        id="clearCalculator"
+        class="calculator-clear"
+        type="button"
+    >
+        Clear
+    </button>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

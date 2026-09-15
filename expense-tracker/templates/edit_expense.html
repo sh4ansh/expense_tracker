@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Expense</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<div class="app-layout">
+
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ₹
+            </div>
+
+            <div>
+                <h2>Expense</h2>
+                <h2>Tracker</h2>
+            </div>
+
+        </div>
+
+
+        <nav class="side-nav">
+
+            <a href="{{ url_for('dashboard') }}">
+                🏠 <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('add_expense_page') }}">
+                ➕ <span>Add Expense</span>
+            </a>
+
+            <a href="{{ url_for('transactions') }}"
+               class="active">
+                📋 <span>Transactions</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}">
+                🚪 <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <main class="main-content">
+
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Edit Expense</h1>
+
+                <p>
+                    Update the details of your expense.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="container"
+             style="margin: 0;">
+
+            <form method="POST">
+
+
+                <label>
+                    Expense Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ expense.title }}"
+                    required
+                >
+
+
+                <label>
+                    Amount
+                </label>
+
+                <input
+                    type="number"
+                    name="amount"
+                    value="{{ expense.amount }}"
+                    step="0.01"
+                    min="0.01"
+                    required
+                >
+
+
+                <label>
+                    Category
+                </label>
+
+                <select name="category" required>
+
+                    <option value="Food"
+                        {% if expense.category == "Food" %}selected{% endif %}>
+                        Food
+                    </option>
+
+                    <option value="Travel"
+                        {% if expense.category == "Travel" %}selected{% endif %}>
+                        Travel
+                    </option>
+
+                    <option value="Shopping"
+                        {% if expense.category == "Shopping" %}selected{% endif %}>
+                        Shopping
+                    </option>
+
+                    <option value="Bills"
+                        {% if expense.category == "Bills" %}selected{% endif %}>
+                        Bills
+                    </option>
+
+                    <option value="Entertainment"
+                        {% if expense.category == "Entertainment" %}selected{% endif %}>
+                        Entertainment
+                    </option>
+
+                    <option value="Education"
+                        {% if expense.category == "Education" %}selected{% endif %}>
+                        Education
+                    </option>
+
+                    <option value="Other"
+                        {% if expense.category == "Other" %}selected{% endif %}>
+                        Other
+                    </option>
+
+                </select>
+
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    name="expense_date"
+                    value="{{ expense.expense_date }}"
+                    required
+                >
+
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    rows="4"
+                >{{ expense.description or "" }}</textarea>
+
+
+                <button type="submit">
+                    Update Expense
+                </button>
+
+
+                <a href="{{ url_for('transactions') }}"
+                   style="text-align:center; margin-top:15px;">
+
+                    Cancel
+
+                </a>
+
+
+            </form>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>
