@@ -1971,3 +1971,21 @@ td a {
     }
 
 }
+/* Remove the dark blue branding section from login/register */
+.auth-brand-section {
+    display: none;
+}
+
+/* Make the login page a single centered column */
+.auth-page {
+    grid-template-columns: 1fr;
+    max-width: 650px;
+    margin: 40px auto;
+}
+
+/* Keep the form nicely centered */
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
